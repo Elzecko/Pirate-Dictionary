@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pirate Dictionary of Doom</title>
+  <style>
+    body {
+      font-family: 'Papyrus', fantasy;
+      background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Parchment_texture.jpg/1024px-Parchment_texture.jpg');
+      background-size: cover;
+      color: darkred;
+      text-align: center;
+      padding: 50px;
+    }
+    .dictionary-box {
+      background: rgba(255, 255, 255, 0.8);
+      padding: 30px;
+      border: 5px dashed saddlebrown;
+      border-radius: 20px;
+      display: inline-block;
+      max-width: 600px;
+      position: relative;
+    }
+    .word {
+      font-size: 36px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .definition {
+      font-size: 20px;
+      font-style: italic;
+      margin-bottom: 30px;
+    }
+    .insult {
+      font-size: 18px;
+      color: darkblue;
+      margin-top: 20px;
+    }
+    button {
+      font-size: 18px;
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 10px;
+      background-color: darkgoldenrod;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: goldenrod;
+    }
+    #resetBtn {
+      position: fixed;
+    }
+  </style>
+</head>
+<body>
+  <div class="dictionary-box">
+    <div class="word" id="word">Loading...</div>
+    <div class="definition" id="definition"></div>
+    <div class="insult" id="insult"></div>
+    <button onclick="showPreviousWord()">⟵ Previous</button>
+    <button onclick="showNextWord()">Next ⟶</button>
+    <button id="resetBtn" onclick="resetDrunkenness()">🧼 Sober Up</button>
+  </div>
+
+  <audio id="accordionSound" src="https://cdn.pixabay.com/download/audio/2022/03/22/audio_d5b4f4cb96.mp3?filename=accordion-pirate-music-4771.mp3"></audio>
+
+  <script>
+    const dictionary = [...document.querySelectorAll('.dictionary-box')];
+
+    const insults = [...document.querySelectorAll('.insult')];
+
+    let currentIndex = Math.floor(Math.random() * dictionary.length);
+    let drunkennessLevel = 0;
+    let angle = 0;
+
+    const dictionaryData = [
+      { word: "Blunderbooty", definition: "A clumsy pirate who trips over his own peg leg." },
+      { word: "Yeet-ho", definition: "To toss an enemy overboard with theatrical flair." },
+      { word: "Grogbucket", definition: "An ancient pirate drinking vessel, never washed." },
+      { word: "Scallywompus", definition: "When a mutiny breaks out over bad soup." },
+      { word: "Keelhaulgasm", definition: "The oddly satisfying moment a rival gets keelhauled." },
+      { word: "Plankcrastinate", definition: "To delay making someone walk the plank." },
+      { word: "Mizzenfizzle", definition: "A failed attempt to sound nautical." },
+      { word: "Rumgremlin", definition: "That guy on the crew who always drinks the last drop of rum and denies it." },
+      { word: "Bootypocalypse", definition: "A state of extreme treasure-related chaos." },
+      { word: "Mapnesia", definition: "When you forget where you buried the treasure." },
+      { word: "Sloopdoofus", definition: "A sailor who can’t tell port from starboard and falls overboard weekly." },
+      { word: "Parrotfax", definition: "When the bird gossips faster than the crew can deny it." },
+      { word: "Hammockquake", definition: "The wild rocking of a ship that sends all napping pirates airborne." },
+      { word: "Anchorflop", definition: "When your dramatic anchor drop is just sad and silent." },
+      { word: "Doubloonloon", definition: "A pirate obsessed with treasure to a worrying degree." }
+    ];
+
+    const insultData = [
+      "Ye smell like barnacle stew on a hot day.",
+      "I’ve met sea cucumbers with more charisma.",
+      "If wit were wind, ye’d be a calm day at sea.",
+      "Yer face could scare the barnacles off the hull.",
+      "I’ve seen jellyfish with firmer backbones.",
+      "Ye’re about as useful as a screen door on a submarine.",
+      "Aye, even the kraken’s got better manners.",
+      "Ye put the 'arse' in 'navigarse'.",
+      "More bluster than ballast, that’s what ye are.",
+      "Yer sword’s as dull as yer tales."
+    ];
+
+    function displayWord() {
+      const entry = dictionaryData[currentIndex];
+      document.getElementById('word').innerText = entry.word;
+      document.getElementById('definition').innerText = entry.definition;
+      document.getElementById('insult').innerText = insultData[Math.floor(Math.random() * insultData.length)];
+      playAccordionWithDrunkenness();
+    }
+
+    function showNextWord() {
+      currentIndex = Math.floor(Math.random() * dictionaryData.length);
+      drunkennessLevel++;
+      displayWord();
+    }
+
+    function showPreviousWord() {
+      currentIndex = Math.floor(Math.random() * dictionaryData.length);
+      drunkennessLevel++;
+      displayWord();
+    }
+
+    function resetDrunkenness() {
+      drunkennessLevel = 0;
+      displayWord();
+    }
+
+    function playAccordionWithDrunkenness() {
+      const audio = document.getElementById('accordionSound');
+      audio.pause();
+      audio.currentTime = 0;
+      audio.playbackRate = Math.max(0.5, 1 - drunkennessLevel * 0.05);
+      audio.volume = Math.min(1, 0.5 + drunkennessLevel * 0.05);
+      audio.play();
+    }
+
+    function animateResetButton() {
+      const btn = document.getElementById('resetBtn');
+      const amplitude = Math.min(200, drunkennessLevel * 10 + 20);
+      const frequency = 0.05 + drunkennessLevel * 0.01;
+      angle += frequency;
+      const top = 50 + Math.sin(angle) * amplitude * 0.1;
+      const left = 50 + Math.cos(angle * 1.5) * amplitude * 0.1;
+      btn.style.top = `${top}%`;
+      btn.style.left = `${left}%`;
+      requestAnimationFrame(animateResetButton);
+    }
+
+    window.onload = () => {
+      displayWord();
+      animateResetButton();
+    }
+  </script>
+</body>
+</html>

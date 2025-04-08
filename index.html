@@ -67,6 +67,7 @@
       position: fixed;
       z-index: 1000;
       width: auto;
+      display: none;
     }
     #zoneBox {
       position: fixed;
@@ -183,6 +184,7 @@
         soberUps--;
         resetDrunkenness();
         updateCurrencyDisplay();
+        if (soberUps === 0) resetBtn.style.display = 'none';
       } else {
         alert("Ye got no Sober Up Buttons, matey!");
       }
@@ -193,6 +195,7 @@
       if (coins >= 1) {
         coins--;
         soberUps++;
+        resetBtn.style.display = 'block';
         updateCurrencyDisplay();
       } else {
         alert("Ye need more Doubloons!");
@@ -232,8 +235,10 @@
 
         if (isInZone(x, y)) updateSpeed();
 
-        resetBtn.style.left = `${x}px`;
-        resetBtn.style.top = `${y}px`;
+        if (soberUps > 0) {
+          resetBtn.style.left = `${x}px`;
+          resetBtn.style.top = `${y}px`;
+        }
         requestAnimationFrame(move);
       }
       move();

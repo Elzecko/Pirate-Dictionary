@@ -12,6 +12,7 @@
       color: darkred;
       text-align: center;
       padding: 50px;
+      overflow: hidden;
     }
     .dictionary-box {
       background: rgba(255, 255, 255, 0.8);
@@ -21,6 +22,7 @@
       display: inline-block;
       max-width: 600px;
       position: relative;
+      z-index: 1;
     }
     .word {
       font-size: 36px;
@@ -52,6 +54,7 @@
     }
     #resetBtn {
       position: fixed;
+      z-index: 1000;
     }
   </style>
 </head>
@@ -68,13 +71,8 @@
   <audio id="accordionSound" src="https://cdn.pixabay.com/download/audio/2022/03/22/audio_d5b4f4cb96.mp3?filename=accordion-pirate-music-4771.mp3"></audio>
 
   <script>
-    const dictionary = [...document.querySelectorAll('.dictionary-box')];
-
-    const insults = [...document.querySelectorAll('.insult')];
-
-    let currentIndex = Math.floor(Math.random() * dictionary.length);
+    let currentIndex = Math.floor(Math.random() * 15);
     let drunkennessLevel = 0;
-    let angle = 0;
 
     const dictionaryData = [
       { word: "Blunderbooty", definition: "A clumsy pirate who trips over his own peg leg." },
@@ -143,14 +141,19 @@
 
     function animateResetButton() {
       const btn = document.getElementById('resetBtn');
-      const amplitude = Math.min(200, drunkennessLevel * 10 + 20);
-      const frequency = 0.05 + drunkennessLevel * 0.01;
-      angle += frequency;
-      const top = 50 + Math.sin(angle) * amplitude * 0.1;
-      const left = 50 + Math.cos(angle * 1.5) * amplitude * 0.1;
-      btn.style.top = `${top}%`;
-      btn.style.left = `${left}%`;
-      requestAnimationFrame(animateResetButton);
+      const maxX = window.innerWidth - btn.offsetWidth;
+      const maxY = window.innerHeight - btn.offsetHeight;
+
+      function move() {
+        const x = Math.random() * maxX;
+        const y = Math.random() * maxY;
+        btn.style.left = `${x}px`;
+        btn.style.top = `${y}px`;
+        const speed = Math.max(500, 3000 - drunkennessLevel * 200);
+        setTimeout(move, speed);
+      }
+
+      move();
     }
 
     window.onload = () => {

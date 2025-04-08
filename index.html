@@ -48,6 +48,7 @@
       background-color: darkgoldenrod;
       color: white;
       cursor: pointer;
+      white-space: nowrap;
     }
     button:hover {
       background-color: goldenrod;
@@ -55,6 +56,7 @@
     #resetBtn {
       position: fixed;
       z-index: 1000;
+      width: auto;
     }
     #zoneBox {
       position: fixed;
@@ -171,10 +173,27 @@
 
     function bounceResetButton() {
       function move() {
+        const btnWidth = resetBtn.offsetWidth;
+        const btnHeight = resetBtn.offsetHeight;
+
         x += dx;
         y += dy;
-        if (x <= 0 || x >= window.innerWidth - resetBtn.offsetWidth) dx = -dx;
-        if (y <= 0 || y >= window.innerHeight - resetBtn.offsetHeight) dy = -dy;
+        if (x <= 0) {
+          x = 0;
+          dx = -dx;
+        }
+        if (x >= window.innerWidth - btnWidth) {
+          x = window.innerWidth - btnWidth;
+          dx = -dx;
+        }
+        if (y <= 0) {
+          y = 0;
+          dy = -dy;
+        }
+        if (y >= window.innerHeight - btnHeight) {
+          y = window.innerHeight - btnHeight;
+          dy = -dy;
+        }
 
         if (isInZone(x, y)) {
           updateSpeed();

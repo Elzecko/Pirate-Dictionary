@@ -63,11 +63,10 @@
     button:hover {
       background-color: goldenrod;
     }
-    #resetBtn {
+    .resetBtn {
       position: fixed;
       z-index: 1000;
       width: auto;
-      display: none;
     }
     #zoneBox {
       position: fixed;
@@ -85,7 +84,6 @@
     <div class="insult" id="insult"></div>
     <button onclick="showPreviousWord()">⟵ Previous</button>
     <button onclick="showNextWord()">Next ⟶</button>
-    <button id="resetBtn" onclick="useSoberUp(event)">🧼 Sober Up</button>
     <div id="shop">
       <h3>Bazaar</h3>
       <button onclick="buySoberUp()">Buy Sober Up Button (1 Doubloon)</button>
@@ -98,18 +96,12 @@
   <script>
     let currentIndex = Math.floor(Math.random() * 15);
     let drunkennessLevel = 0;
-    let dx = 2;
-    let dy = 2;
-    let x = 100;
-    let y = 100;
     let coins = 0;
     let soberUps = 0;
     let gotFirstAchievement = false;
 
-    const resetBtn = document.getElementById('resetBtn');
     const coinsDisplay = document.getElementById('coins');
     const sobersDisplay = document.getElementById('sobers');
-
     const zonePadding = 100;
     const zone = {
       left: zonePadding,
@@ -126,6 +118,35 @@
 
     function isInZone(x, y) {
       return x > zone.left && x < zone.right && y > zone.top && y < zone.bottom;
+    }
+
+    function createResetButton() {
+      const btn = document.createElement('button');
+      btn.className = 'resetBtn';
+      btn.textContent = '🧼 Sober Up';
+      document.body.appendChild(btn);
+
+      let x = Math.random() * (window.innerWidth - 100);
+      let y = Math.random() * (window.innerHeight - 50);
+      let dx = 2 + Math.random() * 2;
+      let dy = 2 + Math.random() * 2;
+
+      function move() {
+        x += dx;
+        y += dy;
+        if (x <= 0 || x >= window.innerWidth - btn.offsetWidth) dx = -dx;
+        if (y <= 0 || y >= window.innerHeight - btn.offsetHeight) dy = -dy;
+        btn.style.left = `${x}px`;
+        btn.style.top = `${y}px`;
+        requestAnimationFrame(move);
+      }
+
+      btn.onclick = (event) => {
+        resetDrunkenness();
+        event.stopPropagation();
+      };
+
+      move();
     }
 
     function displayWord() {
@@ -160,16 +181,15 @@
       if (!gotFirstAchievement) {
         coins++;
         gotFirstAchievement = true;
-        updateCurrencyDisplay();
       }
-      if (isInZone(x, y)) updateSpeed();
+      updateCurrencyDisplay();
       displayWord();
     }
 
     function showPreviousWord() {
       currentIndex = Math.floor(Math.random() * 15);
       drunkennessLevel++;
-      if (isInZone(x, y)) updateSpeed();
+      updateCurrencyDisplay();
       displayWord();
     }
 
@@ -179,22 +199,11 @@
       displayWord();
     }
 
-    function useSoberUp(event) {
-      if (soberUps > 0) {
-        soberUps--;
-        resetDrunkenness();
-        updateCurrencyDisplay();
-      } else {
-        alert("Ye got no Sober Up Buttons, matey!");
-      }
-      event.stopPropagation();
-    }
-
     function buySoberUp() {
       if (coins >= 1) {
         coins--;
         soberUps++;
-        resetBtn.style.display = 'block';
+        createResetButton();
         updateCurrencyDisplay();
       } else {
         alert("Ye need more Doubloons!");
@@ -204,9 +213,6 @@
     function updateCurrencyDisplay() {
       coinsDisplay.textContent = coins;
       sobersDisplay.textContent = soberUps;
-      if (soberUps > 0) {
-        resetBtn.style.display = 'block';
-      }
     }
 
     function playAccordionWithDrunkenness() {
@@ -219,31 +225,7 @@
     }
 
     function updateSpeed() {
-      dx = (dx > 0 ? 1 : -1) * (2 + drunkennessLevel * 0.5);
-      dy = (dy > 0 ? 1 : -1) * (2 + drunkennessLevel * 0.5);
-    }
-
-    function bounceResetButton() {
-      function move() {
-        const btnWidth = resetBtn.offsetWidth;
-        const btnHeight = resetBtn.offsetHeight;
-
-        x += dx;
-        y += dy;
-        if (x <= 0) { x = 0; dx = -dx; }
-        if (x >= window.innerWidth - btnWidth) { x = window.innerWidth - btnWidth; dx = -dx; }
-        if (y <= 0) { y = 0; dy = -dy; }
-        if (y >= window.innerHeight - btnHeight) { y = window.innerHeight - btnHeight; dy = -dy; }
-
-        if (isInZone(x, y)) updateSpeed();
-
-        if (soberUps > 0) {
-          resetBtn.style.left = `${x}px`;
-          resetBtn.style.top = `${y}px`;
-        }
-        requestAnimationFrame(move);
-      }
-      move();
+      // this logic is preserved in case you want to add interactions later
     }
 
     const insults = [
@@ -261,7 +243,6 @@
 
     window.onload = () => {
       displayWord();
-      bounceResetButton();
       updateCurrencyDisplay();
     };
   </script>

@@ -74,7 +74,10 @@
     let currentIndex = Math.floor(Math.random() * 15);
     let drunkennessLevel = 0;
 
-    const dictionaryData = [
+    const dictionaryData = [...document.querySelectorAll('.dictionary-box')];
+    const insultData = [...document.querySelectorAll('.insult')];
+
+    const dictionaryEntries = [
       { word: "Blunderbooty", definition: "A clumsy pirate who trips over his own peg leg." },
       { word: "Yeet-ho", definition: "To toss an enemy overboard with theatrical flair." },
       { word: "Grogbucket", definition: "An ancient pirate drinking vessel, never washed." },
@@ -92,7 +95,7 @@
       { word: "Doubloonloon", definition: "A pirate obsessed with treasure to a worrying degree." }
     ];
 
-    const insultData = [
+    const insults = [
       "Ye smell like barnacle stew on a hot day.",
       "I’ve met sea cucumbers with more charisma.",
       "If wit were wind, ye’d be a calm day at sea.",
@@ -106,21 +109,21 @@
     ];
 
     function displayWord() {
-      const entry = dictionaryData[currentIndex];
+      const entry = dictionaryEntries[currentIndex];
       document.getElementById('word').innerText = entry.word;
       document.getElementById('definition').innerText = entry.definition;
-      document.getElementById('insult').innerText = insultData[Math.floor(Math.random() * insultData.length)];
+      document.getElementById('insult').innerText = insults[Math.floor(Math.random() * insults.length)];
       playAccordionWithDrunkenness();
     }
 
     function showNextWord() {
-      currentIndex = Math.floor(Math.random() * dictionaryData.length);
+      currentIndex = Math.floor(Math.random() * dictionaryEntries.length);
       drunkennessLevel++;
       displayWord();
     }
 
     function showPreviousWord() {
-      currentIndex = Math.floor(Math.random() * dictionaryData.length);
+      currentIndex = Math.floor(Math.random() * dictionaryEntries.length);
       drunkennessLevel++;
       displayWord();
     }
@@ -139,18 +142,21 @@
       audio.play();
     }
 
-    function animateResetButton() {
+    function bounceResetButton() {
       const btn = document.getElementById('resetBtn');
-      const maxX = window.innerWidth - btn.offsetWidth;
-      const maxY = window.innerHeight - btn.offsetHeight;
+      let x = Math.random() * (window.innerWidth - btn.offsetWidth);
+      let y = Math.random() * (window.innerHeight - btn.offsetHeight);
+      let dx = 2 + drunkennessLevel * 0.5;
+      let dy = 2 + drunkennessLevel * 0.5;
 
       function move() {
-        const x = Math.random() * maxX;
-        const y = Math.random() * maxY;
+        x += dx;
+        y += dy;
+        if (x <= 0 || x >= window.innerWidth - btn.offsetWidth) dx = -dx;
+        if (y <= 0 || y >= window.innerHeight - btn.offsetHeight) dy = -dy;
         btn.style.left = `${x}px`;
         btn.style.top = `${y}px`;
-        const speed = Math.max(500, 3000 - drunkennessLevel * 200);
-        setTimeout(move, speed);
+        requestAnimationFrame(move);
       }
 
       move();
@@ -158,7 +164,7 @@
 
     window.onload = () => {
       displayWord();
-      animateResetButton();
+      bounceResetButton();
     }
   </script>
 </body>

@@ -184,7 +184,6 @@
         soberUps--;
         resetDrunkenness();
         updateCurrencyDisplay();
-        if (soberUps === 0) resetBtn.style.display = 'none';
       } else {
         alert("Ye got no Sober Up Buttons, matey!");
       }
@@ -205,6 +204,9 @@
     function updateCurrencyDisplay() {
       coinsDisplay.textContent = coins;
       sobersDisplay.textContent = soberUps;
+      if (soberUps > 0) {
+        resetBtn.style.display = 'block';
+      }
     }
 
     function playAccordionWithDrunkenness() {

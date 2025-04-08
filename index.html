@@ -73,9 +73,8 @@
   <script>
     let currentIndex = Math.floor(Math.random() * 15);
     let drunkennessLevel = 0;
-
-    const dictionaryData = [...document.querySelectorAll('.dictionary-box')];
-    const insultData = [...document.querySelectorAll('.insult')];
+    let dx = 2;
+    let dy = 2;
 
     const dictionaryEntries = [
       { word: "Blunderbooty", definition: "A clumsy pirate who trips over his own peg leg." },
@@ -114,6 +113,7 @@
       document.getElementById('definition').innerText = entry.definition;
       document.getElementById('insult').innerText = insults[Math.floor(Math.random() * insults.length)];
       playAccordionWithDrunkenness();
+      updateSpeed();
     }
 
     function showNextWord() {
@@ -142,12 +142,15 @@
       audio.play();
     }
 
+    function updateSpeed() {
+      dx = 2 + drunkennessLevel * 0.5;
+      dy = 2 + drunkennessLevel * 0.5;
+    }
+
     function bounceResetButton() {
       const btn = document.getElementById('resetBtn');
       let x = Math.random() * (window.innerWidth - btn.offsetWidth);
       let y = Math.random() * (window.innerHeight - btn.offsetHeight);
-      let dx = 2 + drunkennessLevel * 0.5;
-      let dy = 2 + drunkennessLevel * 0.5;
 
       function move() {
         x += dx;

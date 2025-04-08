@@ -75,22 +75,22 @@
     let drunkennessLevel = 0;
     let dx = 2;
     let dy = 2;
-    let x = Math.random() * window.innerWidth;
-    let y = Math.random() * window.innerHeight;
+    let x = 100;
+    let y = 100;
 
-    const dictionaryEntries = [...document.querySelectorAll('.dictionary-box')];
-    const insults = [
-      "Ye smell like barnacle stew on a hot day.",
-      "I’ve met sea cucumbers with more charisma.",
-      "If wit were wind, ye’d be a calm day at sea.",
-      "Yer face could scare the barnacles off the hull.",
-      "I’ve seen jellyfish with firmer backbones.",
-      "Ye’re about as useful as a screen door on a submarine.",
-      "Aye, even the kraken’s got better manners.",
-      "Ye put the 'arse' in 'navigarse'.",
-      "More bluster than ballast, that’s what ye are.",
-      "Yer sword’s as dull as yer tales."
-    ];
+    const zonePadding = 100;
+    const zone = {
+      left: zonePadding,
+      top: zonePadding,
+      right: window.innerWidth - zonePadding,
+      bottom: window.innerHeight - zonePadding
+    };
+
+    const resetBtn = document.getElementById('resetBtn');
+
+    function isInZone(x, y) {
+      return x > zone.left && x < zone.right && y > zone.top && y < zone.bottom;
+    }
 
     function displayWord() {
       const entry = [
@@ -121,12 +121,18 @@
     function showNextWord() {
       currentIndex = Math.floor(Math.random() * 15);
       drunkennessLevel++;
+      if (isInZone(x, y)) {
+        updateSpeed();
+      }
       displayWord();
     }
 
     function showPreviousWord() {
       currentIndex = Math.floor(Math.random() * 15);
       drunkennessLevel++;
+      if (isInZone(x, y)) {
+        updateSpeed();
+      }
       displayWord();
     }
 
@@ -134,7 +140,7 @@
       drunkennessLevel = 0;
       updateSpeed();
       displayWord();
-      event.stopPropagation(); // don't reset movement
+      event.stopPropagation();
     }
 
     function playAccordionWithDrunkenness() {
@@ -152,18 +158,35 @@
     }
 
     function bounceResetButton() {
-      const btn = document.getElementById('resetBtn');
       function move() {
         x += dx;
         y += dy;
-        if (x <= 0 || x >= window.innerWidth - btn.offsetWidth) dx = -dx;
-        if (y <= 0 || y >= window.innerHeight - btn.offsetHeight) dy = -dy;
-        btn.style.left = `${x}px`;
-        btn.style.top = `${y}px`;
+        if (x <= 0 || x >= window.innerWidth - resetBtn.offsetWidth) dx = -dx;
+        if (y <= 0 || y >= window.innerHeight - resetBtn.offsetHeight) dy = -dy;
+
+        if (isInZone(x, y)) {
+          updateSpeed();
+        }
+
+        resetBtn.style.left = `${x}px`;
+        resetBtn.style.top = `${y}px`;
         requestAnimationFrame(move);
       }
       move();
     }
+
+    const insults = [
+      "Ye smell like barnacle stew on a hot day.",
+      "I’ve met sea cucumbers with more charisma.",
+      "If wit were wind, ye’d be a calm day at sea.",
+      "Yer face could scare the barnacles off the hull.",
+      "I’ve seen jellyfish with firmer backbones.",
+      "Ye’re about as useful as a screen door on a submarine.",
+      "Aye, even the kraken’s got better manners.",
+      "Ye put the 'arse' in 'navigarse'.",
+      "More bluster than ballast, that’s what ye are.",
+      "Yer sword’s as dull as yer tales."
+    ];
 
     window.onload = () => {
       displayWord();

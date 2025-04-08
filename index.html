@@ -159,8 +159,8 @@
       if (!gotFirstAchievement) {
         coins++;
         gotFirstAchievement = true;
+        updateCurrencyDisplay();
       }
-      updateCurrencyDisplay();
       if (isInZone(x, y)) updateSpeed();
       displayWord();
     }
@@ -168,7 +168,6 @@
     function showPreviousWord() {
       currentIndex = Math.floor(Math.random() * 15);
       drunkennessLevel++;
-      updateCurrencyDisplay();
       if (isInZone(x, y)) updateSpeed();
       displayWord();
     }
@@ -256,6 +255,7 @@
     window.onload = () => {
       displayWord();
       bounceResetButton();
+      updateCurrencyDisplay();
     };
   </script>
 </body>

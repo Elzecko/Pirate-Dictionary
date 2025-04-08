@@ -56,6 +56,12 @@
       position: fixed;
       z-index: 1000;
     }
+    #zoneBox {
+      position: fixed;
+      border: 2px dashed red;
+      pointer-events: none;
+      z-index: 999;
+    }
   </style>
 </head>
 <body>
@@ -67,6 +73,7 @@
     <button onclick="showNextWord()">Next ⟶</button>
     <button id="resetBtn" onclick="resetDrunkenness(event)">🧼 Sober Up</button>
   </div>
+  <div id="zoneBox"></div>
 
   <audio id="accordionSound" src="https://cdn.pixabay.com/download/audio/2022/03/22/audio_d5b4f4cb96.mp3?filename=accordion-pirate-music-4771.mp3"></audio>
 
@@ -87,6 +94,11 @@
     };
 
     const resetBtn = document.getElementById('resetBtn');
+    const zoneBox = document.getElementById('zoneBox');
+    zoneBox.style.left = `${zone.left}px`;
+    zoneBox.style.top = `${zone.top}px`;
+    zoneBox.style.width = `${zone.right - zone.left}px`;
+    zoneBox.style.height = `${zone.bottom - zone.top}px`;
 
     function isInZone(x, y) {
       return x > zone.left && x < zone.right && y > zone.top && y < zone.bottom;

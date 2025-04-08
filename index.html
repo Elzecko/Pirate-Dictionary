@@ -65,7 +65,7 @@
     <div class="insult" id="insult"></div>
     <button onclick="showPreviousWord()">⟵ Previous</button>
     <button onclick="showNextWord()">Next ⟶</button>
-    <button id="resetBtn" onclick="resetDrunkenness()">🧼 Sober Up</button>
+    <button id="resetBtn" onclick="resetDrunkenness(event)">🧼 Sober Up</button>
   </div>
 
   <audio id="accordionSound" src="https://cdn.pixabay.com/download/audio/2022/03/22/audio_d5b4f4cb96.mp3?filename=accordion-pirate-music-4771.mp3"></audio>
@@ -75,25 +75,10 @@
     let drunkennessLevel = 0;
     let dx = 2;
     let dy = 2;
+    let x = Math.random() * window.innerWidth;
+    let y = Math.random() * window.innerHeight;
 
-    const dictionaryEntries = [
-      { word: "Blunderbooty", definition: "A clumsy pirate who trips over his own peg leg." },
-      { word: "Yeet-ho", definition: "To toss an enemy overboard with theatrical flair." },
-      { word: "Grogbucket", definition: "An ancient pirate drinking vessel, never washed." },
-      { word: "Scallywompus", definition: "When a mutiny breaks out over bad soup." },
-      { word: "Keelhaulgasm", definition: "The oddly satisfying moment a rival gets keelhauled." },
-      { word: "Plankcrastinate", definition: "To delay making someone walk the plank." },
-      { word: "Mizzenfizzle", definition: "A failed attempt to sound nautical." },
-      { word: "Rumgremlin", definition: "That guy on the crew who always drinks the last drop of rum and denies it." },
-      { word: "Bootypocalypse", definition: "A state of extreme treasure-related chaos." },
-      { word: "Mapnesia", definition: "When you forget where you buried the treasure." },
-      { word: "Sloopdoofus", definition: "A sailor who can’t tell port from starboard and falls overboard weekly." },
-      { word: "Parrotfax", definition: "When the bird gossips faster than the crew can deny it." },
-      { word: "Hammockquake", definition: "The wild rocking of a ship that sends all napping pirates airborne." },
-      { word: "Anchorflop", definition: "When your dramatic anchor drop is just sad and silent." },
-      { word: "Doubloonloon", definition: "A pirate obsessed with treasure to a worrying degree." }
-    ];
-
+    const dictionaryEntries = [...document.querySelectorAll('.dictionary-box')];
     const insults = [
       "Ye smell like barnacle stew on a hot day.",
       "I’ve met sea cucumbers with more charisma.",
@@ -108,7 +93,24 @@
     ];
 
     function displayWord() {
-      const entry = dictionaryEntries[currentIndex];
+      const entry = [
+        { word: "Blunderbooty", definition: "A clumsy pirate who trips over his own peg leg." },
+        { word: "Yeet-ho", definition: "To toss an enemy overboard with theatrical flair." },
+        { word: "Grogbucket", definition: "An ancient pirate drinking vessel, never washed." },
+        { word: "Scallywompus", definition: "When a mutiny breaks out over bad soup." },
+        { word: "Keelhaulgasm", definition: "The oddly satisfying moment a rival gets keelhauled." },
+        { word: "Plankcrastinate", definition: "To delay making someone walk the plank." },
+        { word: "Mizzenfizzle", definition: "A failed attempt to sound nautical." },
+        { word: "Rumgremlin", definition: "That guy on the crew who always drinks the last drop of rum and denies it." },
+        { word: "Bootypocalypse", definition: "A state of extreme treasure-related chaos." },
+        { word: "Mapnesia", definition: "When you forget where you buried the treasure." },
+        { word: "Sloopdoofus", definition: "A sailor who can’t tell port from starboard and falls overboard weekly." },
+        { word: "Parrotfax", definition: "When the bird gossips faster than the crew can deny it." },
+        { word: "Hammockquake", definition: "The wild rocking of a ship that sends all napping pirates airborne." },
+        { word: "Anchorflop", definition: "When your dramatic anchor drop is just sad and silent." },
+        { word: "Doubloonloon", definition: "A pirate obsessed with treasure to a worrying degree." }
+      ][currentIndex];
+
       document.getElementById('word').innerText = entry.word;
       document.getElementById('definition').innerText = entry.definition;
       document.getElementById('insult').innerText = insults[Math.floor(Math.random() * insults.length)];
@@ -117,20 +119,22 @@
     }
 
     function showNextWord() {
-      currentIndex = Math.floor(Math.random() * dictionaryEntries.length);
+      currentIndex = Math.floor(Math.random() * 15);
       drunkennessLevel++;
       displayWord();
     }
 
     function showPreviousWord() {
-      currentIndex = Math.floor(Math.random() * dictionaryEntries.length);
+      currentIndex = Math.floor(Math.random() * 15);
       drunkennessLevel++;
       displayWord();
     }
 
-    function resetDrunkenness() {
+    function resetDrunkenness(event) {
       drunkennessLevel = 0;
+      updateSpeed();
       displayWord();
+      event.stopPropagation(); // don't reset movement
     }
 
     function playAccordionWithDrunkenness() {
@@ -143,15 +147,12 @@
     }
 
     function updateSpeed() {
-      dx = 2 + drunkennessLevel * 0.5;
-      dy = 2 + drunkennessLevel * 0.5;
+      dx = (dx > 0 ? 1 : -1) * (2 + drunkennessLevel * 0.5);
+      dy = (dy > 0 ? 1 : -1) * (2 + drunkennessLevel * 0.5);
     }
 
     function bounceResetButton() {
       const btn = document.getElementById('resetBtn');
-      let x = Math.random() * (window.innerWidth - btn.offsetWidth);
-      let y = Math.random() * (window.innerHeight - btn.offsetHeight);
-
       function move() {
         x += dx;
         y += dy;
@@ -161,7 +162,6 @@
         btn.style.top = `${y}px`;
         requestAnimationFrame(move);
       }
-
       move();
     }
 

@@ -213,9 +213,8 @@
     function getSoberUpPrice(n) {
       if (n === 0) return 1;
       if (n <= 10) return n * 10;
-      const stepBase = Math.pow(10, Math.floor(Math.log10((n - 10) * 100)));
-      const step = stepBase * Math.ceil((n - 10) / 10);
-      return step;
+      const level = Math.floor((n - 10) / 10) + 1;
+    return level * 1000;
     }
 
     function buySoberUp() {

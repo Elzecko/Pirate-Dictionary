@@ -134,8 +134,21 @@
       function move() {
         x += dx;
         y += dy;
-        if (x <= 0 || x >= window.innerWidth - btn.offsetWidth) dx = -dx;
-        if (y <= 0 || y >= window.innerHeight - btn.offsetHeight) dy = -dy;
+        let bounced = false;
+
+        if (x <= 0 || x >= window.innerWidth - btn.offsetWidth) {
+          dx = -dx;
+          bounced = true;
+        }
+        if (y <= 0 || y >= window.innerHeight - btn.offsetHeight) {
+          dy = -dy;
+          bounced = true;
+        }
+        if (bounced) {
+          coins++;
+          updateCurrencyDisplay();
+        }
+
         btn.style.left = `${x}px`;
         btn.style.top = `${y}px`;
         requestAnimationFrame(move);
@@ -172,7 +185,6 @@
       document.getElementById('definition').innerText = entry.definition;
       document.getElementById('insult').innerText = insults[Math.floor(Math.random() * insults.length)];
       playAccordionWithDrunkenness();
-      updateSpeed();
     }
 
     function showNextWord() {
@@ -195,7 +207,6 @@
 
     function resetDrunkenness() {
       drunkennessLevel = 0;
-      updateSpeed();
       displayWord();
     }
 
@@ -222,10 +233,6 @@
       audio.playbackRate = Math.max(0.5, 1 - drunkennessLevel * 0.05);
       audio.volume = Math.min(1, 0.5 + drunkennessLevel * 0.05);
       audio.play();
-    }
-
-    function updateSpeed() {
-      // this logic is preserved in case you want to add interactions later
     }
 
     const insults = [

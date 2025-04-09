@@ -211,10 +211,7 @@
     }
 
     function getSoberUpPrice(n) {
-      if (n === 0) return 1;
-      if (n <= 10) return n * 10;
-      const level = Math.floor((n - 10) / 10) + 1;
-    return level * 1000;
+      return Math.pow(2, n); // Price doubles with each purchase
     }
 
     function buySoberUp() {

@@ -210,12 +210,19 @@
       displayWord();
     }
 
+    function getSoberUpPrice(n) {
+      if (n < 10) return (n + 1) * 10 - 9; // 1, 10, 20, ..., 100
+      return Math.floor((n - 9) * 1000);  // 200, 300, 400, ...
+    }
+
     function buySoberUp() {
-      if (coins >= 1) {
-        coins--;
+      const price = getSoberUpPrice(soberUps);
+      if (coins >= price) {
+        coins -= price;
         soberUps++;
         createResetButton();
         updateCurrencyDisplay();
+        document.querySelector('#shop button').innerText = `Buy Sober Up Button (${getSoberUpPrice(soberUps)} Doubloons)`;
       } else {
         alert("Ye need more Doubloons!");
       }
@@ -251,6 +258,7 @@
     window.onload = () => {
       displayWord();
       updateCurrencyDisplay();
+      document.querySelector('#shop button').innerText = `Buy Sober Up Button (${getSoberUpPrice(soberUps)} Doubloons)`;
     };
   </script>
 </body>
